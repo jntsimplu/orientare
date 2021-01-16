@@ -1,4 +1,4 @@
-
+var miscare;
 
 function handleOrientation(event) {
   updateFieldIfNotNull('Orientation_a', event.alpha);
@@ -11,6 +11,16 @@ function incrementEventCount(){
   let counterElement = document.getElementById("num-observed-events")
   let eventCount = parseInt(counterElement.innerHTML)
   counterElement.innerHTML = eventCount + 1;
+
+  let geno = document.getElementById("geno")
+  let countGeno = parseInt(geno.innerHTML)
+
+  if (miscare < -4) {
+    setTimeout(function(){
+      geno.innerHTML = countGeno + 1;
+    }, 500);
+
+  }
 }
 
 function updateFieldIfNotNull(fieldName, value, precision=10){
@@ -19,6 +29,7 @@ function updateFieldIfNotNull(fieldName, value, precision=10){
 }
 
 function handleMotion(event) {
+  miscare = event.acceleration.z;
   updateFieldIfNotNull('Accelerometer_gx', event.accelerationIncludingGravity.x);
   updateFieldIfNotNull('Accelerometer_gy', event.accelerationIncludingGravity.y);
   updateFieldIfNotNull('Accelerometer_gz', event.accelerationIncludingGravity.z);
@@ -51,14 +62,14 @@ demo_button.onclick = function(e) {
   if (is_running){
     window.removeEventListener("devicemotion", handleMotion);
     window.removeEventListener("deviceorientation", handleOrientation);
-    demo_button.innerHTML = "Start demo";
+    demo_button.innerHTML = "START TRAINING";
     demo_button.classList.add('btn-success');
     demo_button.classList.remove('btn-danger');
     is_running = false;
   }else{
     window.addEventListener("devicemotion", handleMotion);
     window.addEventListener("deviceorientation", handleOrientation);
-    document.getElementById("start_demo").innerHTML = "Stop demo";
+    document.getElementById("start_demo").innerHTML = "STOP TRAINING";
     demo_button.classList.remove('btn-success');
     demo_button.classList.add('btn-danger');
     is_running = true;
